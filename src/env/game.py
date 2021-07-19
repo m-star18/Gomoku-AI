@@ -10,7 +10,7 @@ from src.const import (
 
 class Board(object):
     """
-    board for the game
+    Board for the game.
     """
 
     def __init__(self, **kwargs):
@@ -118,3 +118,12 @@ class Board(object):
 
     def get_current_player(self):
         return self.current_player
+
+
+class Game(object):
+    """
+    Game server.
+    """
+
+    def __init__(self, board, **kwargs):
+        self.board = board
