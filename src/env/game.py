@@ -65,3 +65,12 @@ class Board(object):
             square_state[3][:, :] = 1.0  # indicate the colour to play
 
         return square_state[:, ::-1, :]
+
+    def do_move(self, move):
+        self.states[move] = self.current_player
+        self.availables.remove(move)
+        self.current_player = (
+            self.players[0] if self.current_player == self.players[1]
+            else self.players[1]
+        )
+        self.last_move = move
