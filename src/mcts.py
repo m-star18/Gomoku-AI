@@ -15,3 +15,9 @@ class TreeNode(object):
         self._Q = 0
         self._u = 0
         self._P = prior_p
+
+    def expand(self, action_priors):
+        for action, prob in action_priors:
+            if action not in self._children:
+                self._children[action] = TreeNode(self, prob)
+
