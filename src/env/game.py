@@ -107,3 +107,14 @@ class Board(object):
                 return True, player
 
         return False, -1
+
+    def game_end(self):
+        win, winner = self.has_a_winner()
+        if win:
+            return True, winner
+        elif not len(self.availables):
+            return True, -1
+        return False, -1
+
+    def get_current_player(self):
+        return self.current_player
