@@ -21,3 +21,5 @@ class TreeNode(object):
             if action not in self._children:
                 self._children[action] = TreeNode(self, prob)
 
+    def select(self, c_puct):
+        return max(self._children.items(), key=lambda act_node: act_node[1].get_value(c_puct))
