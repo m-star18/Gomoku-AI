@@ -166,3 +166,8 @@ def softmax(x):
     probs /= np.sum(probs)
     return probs
 
+
+def rollout_policy_fn(board):
+    # rollout randomly
+    action_probs = np.random.rand(len(board.availables))
+    return zip(board.availables, action_probs)
