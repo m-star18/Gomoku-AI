@@ -98,3 +98,13 @@ class MCTS(object):
         act_probs = softmax(1.0/temp * np.log(np.array(visits) + 1e-10))
 
         return acts, act_probs
+
+    def update_with_move(self, last_move):
+        if last_move in self._root._children:
+            self._root = self._root._children[last_move]
+            self._root._parent = None
+        else:
+            self._root = TreeNode(None, 1.0)
+
+    def __str__(self):
+        return "MCTS"
