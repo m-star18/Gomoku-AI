@@ -132,3 +132,8 @@ class PolicyValueNet:
     def save_model(self, model_file):
         net_params = self.get_policy_param()  # get model params
         torch.save(net_params, model_file)
+
+
+def set_learning_rate(optimizer, lr):
+    for param_group in optimizer.param_groups:
+        param_group['lr'] = lr
