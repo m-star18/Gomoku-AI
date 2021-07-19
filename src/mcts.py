@@ -40,3 +40,8 @@ class TreeNode(object):
         self._u = (c_puct * self._P * np.sqrt(self._parent._n_visits) / (1 + self._n_visits))
         return self._Q + self._u
 
+    def is_leaf(self):
+        return self._children == {}
+
+    def is_root(self):
+        return self._parent is None
