@@ -86,3 +86,15 @@ class MCTS(object):
 
         # Update value and visit count of nodes in this traversal.
         node.update_recursive(-leaf_value)
+
+    def get_move_probs(self, state, temp=1e-3):
+        for n in range(self._n_playout):
+            state_copy = copy.deepcopy(state)
+            self._playout(state_copy)
+
+        # calc the move probabilities based on visit counts at the root node
+        act_visits = [(act, node._n_visits) for act, node in self._root._children.items()]
+        acts, visits = zip(*act_visits)
+        act_probs = softmax(1.0/temp * np.log(np.array(visits) + 1e-10))
+
+        return acts, act_probs
