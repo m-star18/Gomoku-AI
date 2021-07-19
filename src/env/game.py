@@ -127,3 +127,26 @@ class Game(object):
 
     def __init__(self, board, **kwargs):
         self.board = board
+
+    def graphic(self, board, player1, player2):
+        width = board.width
+        height = board.height
+
+        print("Player", player1, "with X".rjust(3))
+        print("Player", player2, "with O".rjust(3))
+        print()
+        for x in range(width):
+            print("{0:19}".format(x), end='')
+        print('\r\n')
+        for i in range(height - 1, -1, -1):
+            print("{0:4d}".format(i), end='')
+            for j in range(width):
+                loc = i * width + j
+                p = board.states.get(loc, -1)
+                if p == player1:
+                    print('X'.center(HEIGHT), end='')
+                elif p == player2:
+                    print('O'.center(HEIGHT), end='')
+                else:
+                    print('_'.center(HEIGHT), end='')
+            print('\r\n\r\n')
