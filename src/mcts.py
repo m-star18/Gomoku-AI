@@ -57,3 +57,32 @@ class MCTS(object):
         self._policy = policy_value_fn
         self._c_puct = c_puct
         self._n_playout = n_playout
+
+    def _playout(self, state):
+        node = self._root
+        while 1:
+            if node.is_leaf():
+                break
+            # Greedily select next move.
+            action, node = node.select(self._c_puct)
+            state.do_move(action)
+
+        # Evaluate the leaf using a network which outputs a list of
+        # (action, probability) tuples p and also a score v in [-1, 1]
+        # for the current player.
+        action_probs, leaf_value = self._policy(state)
+        # Check for end of game.
+        end, winner = state.game_end()
+        if not end:
+            node.expand(action_probs)
+        else:
+            # for end state，return the "true" leaf_value
+            if winner == -1:  # tie
+                leaf_value = 0.0
+            else:
+                leaf_value = (
+                    1.0 if winner == state.get_current_player() else -1.0
+                )
+
+        # Update value and visit count of nodes in this traversal.
+        node.update_recursive(-leaf_value)
