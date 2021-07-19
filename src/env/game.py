@@ -37,3 +37,13 @@ class Board(object):
         h = move // self.width
         w = move % self.width
         return [h, w]
+
+    def location_to_move(self, location):
+        if len(location) != 2:
+            return -1
+        h = location[0]
+        w = location[1]
+        move = h * self.width + w
+        if move not in range(self.width * self.height):
+            return -1
+        return move
