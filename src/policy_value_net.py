@@ -61,8 +61,7 @@ class PolicyValueNet:
             self.policy_value_net = Net(board_width, board_height).cuda()
         else:
             self.policy_value_net = Net(board_width, board_height)
-        self.optimizer = optim.Adam(self.policy_value_net.parameters(),
-                                    weight_decay=self.l2_const)
+        self.optimizer = optim.Adam(self.policy_value_net.parameters(), weight_decay=self.l2_const)
 
         if model_file:
             net_params = torch.load(model_file)
@@ -82,18 +81,16 @@ class PolicyValueNet:
 
     def policy_value_fn(self, board):
         legal_positions = board.availables
-        current_state = np.ascontiguousarray(board.current_state().reshape(
-                -1, 4, self.board_width, self.board_height))
+        current_state = np.ascontiguousarray(board.current_state().reshape(-1, 4, self.board_width, self.board_height))
         if self.use_gpu:
-            log_act_probs, value = self.policy_value_net(
-                    Variable(torch.from_numpy(current_state)).cuda().float())
+            log_act_probs, value = self.policy_value_net(Variable(torch.from_numpy(current_state)).cuda().float())
             act_probs = np.exp(log_act_probs.data.cpu().numpy().flatten())
         else:
-            log_act_probs, value = self.policy_value_net(
-                    Variable(torch.from_numpy(current_state)).float())
+            log_act_probs, value = self.policy_value_net(Variable(torch.from_numpy(current_state)).float())
             act_probs = np.exp(log_act_probs.data.numpy().flatten())
         act_probs = zip(legal_positions, act_probs[legal_positions])
         value = value.data[0][0]
+
         return act_probs, value
 
     def train_step(self, state_batch, mcts_probs, winner_batch, lr):
@@ -123,9 +120,7 @@ class PolicyValueNet:
         loss.backward()
         self.optimizer.step()
         # calc policy entropy, for monitoring only
-        entropy = -torch.mean(
-                torch.sum(torch.exp(log_act_probs) * log_act_probs, 1)
-                )
+        entropy = -torch.mean(torch.sum(torch.exp(log_act_probs) * log_act_probs, 1))
         return loss.data[0], entropy.data[0]
         # for pytorch version >= 0.5 please use the following line instead.
         # return loss.item(), entropy.item()
