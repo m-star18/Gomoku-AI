@@ -32,3 +32,8 @@ class Board(object):
         self.availables = list(range(self.width * self.height))
         self.states = {}
         self.last_move = -1
+
+    def move_to_location(self, move):
+        h = move // self.width
+        w = move % self.width
+        return [h, w]
