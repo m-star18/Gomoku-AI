@@ -27,6 +27,7 @@ class Board(object):
     def init_board(self, start_player=0):
         if self.width < self.n_in_row or self.height < self.n_in_row:
             raise Exception(f'board width and height can not be less than {self.n_in_row}')
+
         self.current_player = self.players[start_player]
         # keep available moves in a list
         self.availables = list(range(self.width * self.height))
@@ -41,9 +42,26 @@ class Board(object):
     def location_to_move(self, location):
         if len(location) != 2:
             return -1
+
         h = location[0]
         w = location[1]
         move = h * self.width + w
         if move not in range(self.width * self.height):
             return -1
+
         return move
+
+    def current_state(self):
+        square_state = np.zeros((4, self.width, self.height))
+        if self.states:
+            moves, players = np.array(list(zip(*self.states.items())))
+            move_curr = moves[players == self.current_player]
+            move_oppo = moves[players != self.current_player]
+            square_state[0][move_curr // self.width, move_curr % self.height] = 1.0
+            square_state[1][move_oppo // self.width, move_oppo % self.height] = 1.0
+            # indicate the last move location
+            square_state[2][self.last_move // self.width, self.last_move % self.height] = 1.0
+        if len(self.states) % 2 == 0:
+            square_state[3][:, :] = 1.0  # indicate the colour to play
+
+        return square_state[:, ::-1, :]
