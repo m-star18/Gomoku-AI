@@ -23,3 +23,9 @@ class TreeNode(object):
 
     def select(self, c_puct):
         return max(self._children.items(), key=lambda act_node: act_node[1].get_value(c_puct))
+
+    def update(self, leaf_value):
+        # Count visit.
+        self._n_visits += 1
+        # Update Q, a running average of values for all visits.
+        self._Q += 1.0*(leaf_value - self._Q) / self._n_visits
