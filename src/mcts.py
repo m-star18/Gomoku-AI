@@ -45,3 +45,15 @@ class TreeNode(object):
 
     def is_root(self):
         return self._parent is None
+
+
+class MCTS(object):
+    """
+    An implementation of Monte Carlo Tree Search.
+    """
+
+    def __init__(self, policy_value_fn, c_puct=5, n_playout=10000):
+        self._root = TreeNode(None, 1.0)
+        self._policy = policy_value_fn
+        self._c_puct = c_puct
+        self._n_playout = n_playout
