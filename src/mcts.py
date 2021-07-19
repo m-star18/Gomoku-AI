@@ -36,3 +36,7 @@ class TreeNode(object):
             self._parent.update_recursive(-leaf_value)
         self.update(leaf_value)
 
+    def get_value(self, c_puct):
+        self._u = (c_puct * self._P * np.sqrt(self._parent._n_visits) / (1 + self._n_visits))
+        return self._Q + self._u
+
