@@ -143,3 +143,32 @@ class TrainPipeline:
         win_ratio = 1.0*(win_cnt[1] + 0.5*win_cnt[-1]) / n_games
         print(f"num_playouts:{self.pure_mcts_playout_num}, win: {win_cnt[1]}, lose: {win_cnt[2]}, tie:{win_cnt[-1]}")
         return win_ratio
+
+    def run(self):
+        try:
+            for i in range(self.game_batch_num):
+                self.collect_selfplay_data(self.play_batch_size)
+                print(f"batch i:{i + 1}, episode_len:{self.episode_len}")
+                if len(self.data_buffer) > self.batch_size:
+                    loss, entropy = self.policy_update()
+                # check the performance of the current model,
+                # and save the model params
+                if (i + 1) % self.check_freq == 0:
+                    print(f"current self-play batch: {i + 1}")
+                    win_ratio = self.policy_evaluate()
+                    self.policy_value_net.save_model('./current_policy.model')
+                    if win_ratio > self.best_win_ratio:
+                        print("New best policy!!!!!!!!")
+                        self.best_win_ratio = win_ratio
+                        # update the best_policy
+                        self.policy_value_net.save_model('./best_policy.model')
+                        if self.best_win_ratio == 1.0 and self.pure_mcts_playout_num < 5000:
+                            self.pure_mcts_playout_num += 1000
+                            self.best_win_ratio = 0.0
+        except KeyboardInterrupt:
+            print('\n\rquit')
+
+
+if __name__ == '__main__':
+    training_pipeline = TrainPipeline()
+    training_pipeline.run()
