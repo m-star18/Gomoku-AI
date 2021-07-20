@@ -55,3 +55,21 @@ class TrainPipeline:
                                       n_playout=self.n_playout,
                                       is_selfplay=1)
 
+    def get_equi_data(self, play_data):
+        extend_data = []
+        for state, mcts_porb, winner in play_data:
+            for i in range(1, 5):
+                # rotate counterclockwise
+                equi_state = np.array([np.rot90(s, i) for s in state])
+                equi_mcts_prob = np.rot90(np.flipud(
+                    mcts_porb.reshape(self.board_height, self.board_width)), i)
+                extend_data.append((equi_state,
+                                    np.flipud(equi_mcts_prob).flatten(),
+                                    winner))
+                # flip horizontally
+                equi_state = np.array([np.fliplr(s) for s in equi_state])
+                equi_mcts_prob = np.fliplr(equi_mcts_prob)
+                extend_data.append((equi_state,
+                                    np.flipud(equi_mcts_prob).flatten(),
+                                    winner))
+        return extend_data
