@@ -13,7 +13,7 @@ This is an implementation of the AlphaZero algorithm for playing the simple boar
 
 - Python 3.9
 - Numpy 1.21.1
-- Pytorch 
+- Pytorch 1.9.0
 
 ## Getting Started
 
