@@ -136,10 +136,10 @@ class Game(object):
         print("Player", player2, "with O".rjust(3))
         print()
         for x in range(width):
-            print("{0:19}".format(x), end='')
+            print(f"{x:19}", end='')
         print('\r\n')
         for i in range(height - 1, -1, -1):
-            print("{0:4d}".format(i), end='')
+            print(f"{i:4d}", end='')
             for j in range(width):
                 loc = i * width + j
                 p = board.states.get(loc, -1)

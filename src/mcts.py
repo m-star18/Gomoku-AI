@@ -158,7 +158,7 @@ class MCTSPlayer(object):
             print("WARNING: the board is full")
 
     def __str__(self):
-        return "MCTS {}".format(self.player)
+        return f"MCTS {self.player}"
 
 
 def softmax(x):
@@ -312,4 +312,4 @@ class PureMCTSPlayer(object):
             print("WARNING: the board is full")
 
     def __str__(self):
-        return "MCTS {}".format(self.player)
+        return f"MCTS {self.player}"

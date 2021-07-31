@@ -91,15 +91,15 @@ class TrainPipeline:
         old_probs, old_v = self.policy_value_net.policy_value(state_batch)
         for i in range(self.epochs):
             loss, entropy = self.policy_value_net.train_step(
-                    state_batch,
-                    mcts_probs_batch,
-                    winner_batch,
-                    self.learn_rate*self.lr_multiplier)
+                state_batch,
+                mcts_probs_batch,
+                winner_batch,
+                self.learn_rate * self.lr_multiplier)
             new_probs, new_v = self.policy_value_net.policy_value(state_batch)
             kl = np.mean(np.sum(old_probs * (
                     np.log(old_probs + 1e-10) - np.log(new_probs + 1e-10)),
-                    axis=1)
-            )
+                                axis=1)
+                         )
             if kl > self.kl_targ * 4:  # early stopping if D_KL diverges badly
                 break
         # adaptively adjust the learning rate
@@ -114,18 +114,13 @@ class TrainPipeline:
         explained_var_new = (1 -
                              np.var(np.array(winner_batch) - new_v.flatten()) /
                              np.var(np.array(winner_batch)))
-        print(("kl:{:.5f},"
-               "lr_multiplier:{:.3f},"
-               "loss:{},"
-               "entropy:{},"
-               "explained_var_old:{:.3f},"
-               "explained_var_new:{:.3f}"
-               ).format(kl,
-                        self.lr_multiplier,
-                        loss,
-                        entropy,
-                        explained_var_old,
-                        explained_var_new))
+        print(f"kl:{kl:.5f},"
+              f"lr_multiplier:{self.lr_multiplier:.3f},"
+              f"loss:{loss},"
+              f"entropy:{entropy},"
+              f"explained_var_old:{explained_var_old:.3f},"
+              f"explained_var_new:{explained_var_new:.3f}"
+              )
         return loss, entropy
 
     def policy_evaluate(self, n_games=10):
