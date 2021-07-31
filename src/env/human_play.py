@@ -36,13 +36,13 @@ class Human(object):
         return move
 
     def __str__(self):
-        return "Human {}".format(self.player)
+        return f"Human {self.player}"
 
 
 def run():
     n = WIN
     width, height = WIDTH, HEIGHT
-    model_file = 'best_policy_19_19_5.model'
+    model_file = 'best_policy.model'
     try:
         board = Board(width=width, height=height, n_in_row=n)
         game = Game(board)
